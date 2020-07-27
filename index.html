@@ -1,73 +1,142 @@
 <!DOCTYPE html>
 <html lang="en">
-
-<head>
+  <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Resultsheet - Marksheet generator</title>
-    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet">
+    <link
+      href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap"
+      rel="stylesheet"
+    />
     <link rel="stylesheet" href="style.css" />
-</head>
+  </head>
 
-<body>
+  <body>
     <div class="container">
-        <h2 class="main-title">Dynamic Grading</h2>
-        <div class="header-box">
-            <div class="header">
-                <span>Subject</span>
-                <span>Marks</span>
-                <span>Action</span>
-                <span>Grade</span>
-            </div>
-            <div class="body">
-                <div class="row">
-                    <label for="bangla">Bangla</label>
-                    <div class="marks-box">
-                        <input type="text" placeholder="Number you got" />
-                    </div>
-                    <div class="action-box">
-                        <button>Calculate</button>
-                    </div>
-                    <div class="grade-box">
-                        <p>F</p>
-                    </div>
-                </div>
-
-                <div class="row">
-                    <label for="english">English</label>
-                    <div class="marks-box">
-                        <input type="text" placeholder="Number you got" />
-                    </div>
-                    <div class="action-box">
-                        <button>Calculate</button>
-                    </div>
-                    <div class="grade-box">
-                        <p>F</p>
-                    </div>
-                </div>
-                <div class="row">
-                    <label for="ict">ICT</label>
-                    <div class="marks-box">
-                        <input type="text" placeholder="Number you got" />
-                    </div>
-                    <div class="action-box">
-                        <button>Calculate</button>
-                    </div>
-                    <div class="grade-box">
-                        <p>F</p>
-                    </div>
-                </div>
-            </div>
-            <div class="footer">
-                <p>Total Mark: <strong>00</strong></p>
-                <div class="action-box">
-                    <button>Calculate</button>
-                </div>
-
-                <p>Final Grade: <strong>F</strong></p>
-            </div>
+      <h2 class="main-title">Dynamic Grading</h2>
+      <div class="header-box">
+        <div class="header">
+          <span>Subject</span>
+          <span>Marks</span>
+          <span>Action</span>
+          <span>Grade</span>
         </div>
-    </div>
-</body>
+        <div class="body">
+          <div class="row">
+            <label for="bangla">Bangla</label>
+            <div class="marks-box">
+              <input type="text" placeholder="Number you got" />
+            </div>
+            <div class="action-box">
+              <button>Calculate</button>
+            </div>
+            <div class="grade-box">
+              <p>F</p>
+            </div>
+          </div>
 
+          <div class="row">
+            <label for="english">English</label>
+            <div class="marks-box">
+              <input type="text" placeholder="Number you got" />
+            </div>
+            <div class="action-box">
+              <button>Calculate</button>
+            </div>
+            <div class="grade-box">
+              <p>F</p>
+            </div>
+          </div>
+          <div class="row">
+            <label for="ict">ICT</label>
+            <div class="marks-box">
+              <input type="text" placeholder="Number you got" />
+            </div>
+            <div class="action-box">
+              <button>Calculate</button>
+            </div>
+            <div class="grade-box">
+              <p>F</p>
+            </div>
+          </div>
+        </div>
+        <div class="footer">
+          <p>Total Mark: <strong id="totalMark">00</strong></p>
+          <div class="action-box">
+            <button>Calculate</button>
+          </div>
+
+          <p>Final Grade: <strong id="finalGrade">F</strong></p>
+        </div>
+      </div>
+    </div>
+    <script>
+      const actionButton = document.querySelectorAll('.action-box button');
+      for (let i = 0; i < actionButton.length; i++) {
+        const element = actionButton[i];
+        element.addEventListener('click', function (event) {
+          if (i == 3) {
+            marksBox(0, classInterval);
+            marksBox(1, classInterval);
+            marksBox(2, classInterval);
+            const number = totalMark();
+            finalGrade(Math.round(number), classInterval);
+          } else {
+            marksBox(i, classInterval);
+          }
+        });
+      }
+
+      function marksBox(i, letterGrade) {
+        const marks = document.querySelectorAll('.marks-box input');
+        const grade = document.querySelectorAll('.grade-box p');
+        let marksNumber = marks[i].value;
+        marksNumber = +marksNumber;
+        grade[i].innerText = letterGrade(marksNumber);
+      }
+
+      function classInterval(n) {
+        if (n >= 80 && n <= 100) {
+          return 'A+';
+        } else if (n >= 70 && n <= 79) {
+          return 'A';
+        } else if (n >= 60 && n <= 69) {
+          return 'A-';
+        } else if (n >= 50 && n <= 59) {
+          return 'B';
+        } else if (n >= 40 && n <= 49) {
+          return 'C';
+        } else if (n >= 33 && n <= 39) {
+          return 'D';
+        } else if (n >= 0 && n <= 32) {
+          return 'F';
+        }
+      }
+
+      function totalMark() {
+        const marks = document.querySelectorAll('.marks-box input');
+        const totalMark = document.getElementById('totalMark');
+        let totalMarksNumber = 0;
+        for (let i = 0; i < marks.length; i++) {
+          let marksNumber = marks[i].value;
+          marksNumber = +marksNumber;
+          totalMarksNumber = totalMarksNumber + marksNumber;
+        }
+        totalMark.innerText = totalMarksNumber;
+        return totalMarksNumber / 3;
+      }
+
+      function finalGrade(number, letterGrade) {
+        const finalGrade = document.getElementById('finalGrade');
+        finalGrade.innerText = letterGrade(number);
+        const grade = document.querySelectorAll('.grade-box p');
+        for (let i = 0; i < grade.length; i++) {
+          if (grade[i].innerText == 'F') {
+            finalGrade.innerText = 'F';
+            break;
+          }
+        }
+      }
+    </script>
+  </body>
 </html>
